@@ -1,0 +1,21 @@
+{
+  "manipulation": [
+    "ako me stvarno volis",
+    "ako me volis dokazaces",
+    "nemoj da kazes roditeljima",
+    "nemoj roditeljima da kazes",
+    "posalji mi svoju lokaciju"
+  ],
+  "threat": [
+    "ako ne uradis kako kazem",
+    "videces ti",
+    "naci cu te",
+    "kaznicu te"
+  ],
+  "grooming": [
+    "ovo je nasa tajna",
+    "nemoj da ukljucis odrasle",
+    "nemoj nikome da kazes",
+    "nemoj da kazes prijateljima"
+  ]
+}
