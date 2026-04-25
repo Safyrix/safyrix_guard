@@ -1,0 +1,165 @@
+# Safyrix Risk Classification - Categories Configuration
+# Version: 1.0.0
+# Last updated: 2026-04-25
+
+metadata:
+  version: "1.0.0"
+  language: "sr"
+  total_target_samples: 10000
+  description: "Multi-domain risk classification dataset for Serbian language"
+
+# Distribucija po nivou rizika (mora da sumira 1.0)
+risk_levels:
+  low:
+    target_ratio: 0.40
+    description: "Bezbedne, normalne poruke bez rizika"
+  medium:
+    target_ratio: 0.30
+    description: "Sumnjive poruke koje zahtevaju oprez"
+  high:
+    target_ratio: 0.30
+    description: "Jasno opasne poruke - prevara, pretnja, manipulacija"
+
+# Kategorije rizika (svaka ima svoj target u broju primera)
+categories:
+
+  # ============================================
+  # BEZBEDNE PORUKE (low risk)
+  # ============================================
+  safe_personal:
+    risk_level: "low"
+    target_samples: 1500
+    description: "Normalne licne poruke izmedju prijatelja, porodice"
+    subcategories:
+      - "pozdravi i pitanja"
+      - "dogovori za izlazak"
+      - "razgovor o vremenu i hobijima"
+      - "razmena slika i video sadrzaja"
+    seed_examples:
+      - "Hej, kako si? Sta radis veceras?"
+      - "Vidimo se sutra u 18h ispred kafica"
+      - "Mama je spremila sarmu, dolazi na rucak"
+
+  safe_business:
+    risk_level: "low"
+    target_samples: 1500
+    description: "Normalna poslovna komunikacija"
+    subcategories:
+      - "interna komunikacija u firmi"
+      - "klijent-firma upiti bez osetljivih podataka"
+      - "rasporedi i sastanci"
+      - "fakture i poslovni dogovori"
+    seed_examples:
+      - "Sastanak je pomeren za 15h u sali za konferencije"
+      - "Poslao sam ti predlog ugovora na pregled"
+      - "Treba mi izvestaj za prosli kvartal do petka"
+
+  safe_informational:
+    risk_level: "low"
+    target_samples: 1000
+    description: "Informativne poruke bez akcije"
+    subcategories:
+      - "vesti i obavestenja"
+      - "edukativni sadrzaj"
+      - "promocije bez prevarne namere"
+
+  # ============================================
+  # SUMNJIVE PORUKE (medium risk)
+  # ============================================
+  suspicious_data_request:
+    risk_level: "medium"
+    target_samples: 1000
+    description: "Trazenje podataka koji nisu jasno legitimni"
+    subcategories:
+      - "trazenje email adrese ili telefona"
+      - "trazenje datuma rodjenja"
+      - "trazenje adrese stanovanja"
+    seed_examples:
+      - "Mozes li mi poslati svoj broj telefona?"
+      - "Treba mi tvoja mejl adresa za neki posao"
+
+  suspicious_link:
+    risk_level: "medium"
+    target_samples: 1000
+    description: "Sumnjivi linkovi bez jasnog phishing konteksta"
+    subcategories:
+      - "skraceni linkovi (bit.ly, tinyurl)"
+      - "linkovi sa neobicnim domenom"
+      - "linkovi bez konteksta"
+    seed_examples:
+      - "Pogledaj ovo http://bit.ly/3xK8mNp"
+      - "Klikni ovde da vidis"
+
+  suspicious_pressure:
+    risk_level: "medium"
+    target_samples: 1000
+    description: "Pritisak za brzu odluku bez prevare"
+    subcategories:
+      - "vremenski pritisak"
+      - "emocionalna manipulacija (blaga)"
+      - "FOMO taktike"
+
+  # ============================================
+  # OPASNE PORUKE (high risk)
+  # ============================================
+  phishing_financial:
+    risk_level: "high"
+    target_samples: 800
+    description: "Finansijske prevare - banke, placanja"
+    subcategories:
+      - "lazni mejlovi banke"
+      - "lazna obavestenja o paketima (Posta Srbije)"
+      - "lazni nasledstva i nagrade"
+      - "investicione prevare"
+    seed_examples:
+      - "Vasa kartica je blokirana. Kliknite ovde da je odblokirate."
+      - "Cestitamo, osvojili ste 50.000 EUR. Za isplatu posaljite svoje podatke."
+
+  pii_extraction:
+    risk_level: "high"
+    target_samples: 600
+    description: "Direktno trazenje licnih podataka (JMBG, lozinke)"
+    subcategories:
+      - "trazenje JMBG"
+      - "trazenje lozinki"
+      - "trazenje broja kartice i CVV"
+      - "trazenje verifikacionih kodova"
+    seed_examples:
+      - "Posalji mi tvoj JMBG da bih mogao da te identifikujem"
+      - "Koja ti je sifra za nalog?"
+
+  threats_extortion:
+    risk_level: "high"
+    target_samples: 500
+    description: "Pretnje, ucene, zastrasivanje"
+    subcategories:
+      - "ucene sa kompromitujucim materijalom"
+      - "pretnje fizickim nasiljem"
+      - "pretnje porodici"
+
+  grooming_predatory:
+    risk_level: "high"
+    target_samples: 500
+    description: "Predatorske poruke usmerene na maloletnike"
+    subcategories:
+      - "izolacija od porodice (cuvaj tajnu)"
+      - "neprimerene aluzije"
+      - "manipulacija poverenjem"
+    notes: "Ova kategorija zahteva posebnu paznju i etiku"
+
+  scam_romance:
+    risk_level: "high"
+    target_samples: 300
+    description: "Romanticne prevare"
+    subcategories:
+      - "lazna emocionalna povezanost"
+      - "trazenje novca preko emocija"
+
+  scam_authority:
+    risk_level: "high"
+    target_samples: 300
+    description: "Lazno predstavljanje kao autoritet"
+    subcategories:
+      - "lazni MUP / inspekcija"
+      - "lazni poreski organi"
+      - "lazni IT support"
