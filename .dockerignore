@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# venv
+.venv/
+venv/
+
+# git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (ako imaš frontend u repo)
+node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/

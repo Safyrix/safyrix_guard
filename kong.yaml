@@ -1,0 +1,25 @@
+_format_version: "3.0"
+
+services:
+  - name: safyrix-analyzer
+    url: http://analyzer:8000
+    routes:
+      - name: analyze-route
+        paths:
+          - /analyze
+          - /analyze_v2
+        methods:
+          - POST
+        strip_path: false
+
+plugins:
+  - name: key-auth
+    service: safyrix-analyzer
+    config:
+      key_names:
+        - apikey
+
+consumers:
+  - username: tenant1
+    keyauth_credentials:
+      - key: z19k0BybQEWLQa5zNFeOgMceMKhv1JA9

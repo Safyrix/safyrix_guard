@@ -1,0 +1,41 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables (TAJNI PODACI!)
+.env
+.env.local
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database files (osetljivi podaci korisnika)
+*.db
+*.sqlite
+*.sqlite3
+safyrix_guard.db
+
+# Logs
+*.log
+logs/
+data/active_learning_candidates.log
+
+# Storage (potencijalno osetljivi fajlovi)
+storage/
+
+# Models (veliki fajlovi - bolje preko Git LFS ili posebno)
+# models/*.pkl  # Otkomentariši ovo ako su modeli > 100MB

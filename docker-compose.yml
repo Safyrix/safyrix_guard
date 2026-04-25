@@ -1,0 +1,81 @@
+services:
+  kong-db:
+    image: postgres:16
+    container_name: kong_db
+    environment:
+      POSTGRES_DB: kong
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kong -d kong"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - kong_db_data:/var/lib/postgresql/data
+
+  analyzer:
+    build: .
+    container_name: safyrix_analyzer
+    ports:
+      - "9002:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health | grep -q ok"]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+
+  kong-migrations:
+    image: kong:3.7
+    depends_on:
+      kong-db:
+        condition: service_healthy
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-db
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PG_DATABASE: kong
+    command: ["kong", "migrations", "bootstrap"]
+    restart: "on-failure"
+
+  kong-gateway:
+    image: kong:3.7
+    container_name: kong_gateway
+    depends_on:
+      kong-db:
+        condition: service_healthy
+      kong-migrations:
+        condition: service_completed_successfully
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-db
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PG_DATABASE: kong
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+    ports:
+      - "9000:8000"
+      - "9001:8001"
+    restart: always
+
+  kong-init:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      kong-gateway:
+        condition: service_started
+      analyzer:
+        condition: service_healthy
+    environment:
+      KONG_ADMIN: http://kong-gateway:8001
+      SERVICE_URL: http://analyzer:8000
+    volumes:
+      - ./kong/init.sh:/init.sh:ro
+    command: ["/bin/sh", "/init.sh"]
+    restart: "on-failure"
+
+volumes:
+  kong_db_data:

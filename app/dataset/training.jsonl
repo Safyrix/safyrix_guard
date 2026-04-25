@@ -1,0 +1,4 @@
+{"text": "Kako si danas?", "label": "safe"}
+{"text": "Sta radis veceras?", "label": "safe"}
+{"text": "Moj JMBG je 1507993775012", "label": "high_risk"}
+{"text": "Možeš li poslati taj dokument?", "label": "medium_risk"}

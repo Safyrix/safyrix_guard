@@ -1,0 +1,23 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: safyrix-analyzer
+    url: http://analyzer:8000
+    routes:
+      - name: analyze-route
+        paths:
+          - /v1/analyze
+        strip_path: false
+        methods: [POST]
+    plugins:
+      - name: key-auth
+        config:
+          key_names: ["x-api-key"]
+          hide_credentials: true
+
+      - name: rate-limiting
+        config:
+          minute: 60
+          policy: local
+          fault_tolerant: true

@@ -1,0 +1,10 @@
+_format_version: "3.0"
+
+services:
+  - name: safyrix-analyzer
+    url: http://safyrix_analyzer:8000
+    routes:
+      - name: safyrix-route
+        paths:
+          - /
+        strip_path: false
