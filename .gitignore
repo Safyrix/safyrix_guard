@@ -39,3 +39,7 @@ storage/
 
 # Models (veliki fajlovi - bolje preko Git LFS ili posebno)
 # models/*.pkl  # Otkomentariši ovo ako su modeli > 100MB
+# Pipeline runtime data (ne pripadaju Git-u)
+data_pipeline/state/*.json
+data_pipeline/output/*.jsonl
+data_pipeline/logs/*.log
