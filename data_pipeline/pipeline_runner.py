@@ -42,6 +42,11 @@ from data_pipeline.config.categories_loader import (
 )
 from data_pipeline.generators.base_generator import GenerationRequest
 from data_pipeline.generators.gemini_generator import GeminiGenerator
+from data_pipeline.generators.groq_generator import GroqGenerator
+from data_pipeline.generators.multi_provider_generator import (
+    MultiProviderGenerator,
+    RoutingStrategy,
+)
 from data_pipeline.generators.prompt_templates import (
     get_template,
     list_available_categories,
@@ -199,7 +204,8 @@ class PipelineRunner:
         self.logger.info(f"Output: {self.output_file}")
         
         # Init generator (lazy - tek kad imamo state)
-        self.generator = GeminiGenerator(api_key=self.api_key)
+        # Init multi-provider generator
+        self.generator = self._build_multi_provider_generator()
         
         # Restore duplicate checker state
         self._restore_duplicate_state()
@@ -558,7 +564,47 @@ class PipelineRunner:
         if self.shutdown.should_stop:
             print("\nShutdown clean. Sledeci run nastavlja gde je stao.")
 
-
+# ============================================================
+    # GENERATOR FACTORY
+    # ============================================================
+    
+    def _build_multi_provider_generator(self) -> MultiProviderGenerator:
+        """
+        Pravi MultiProviderGenerator sa dostupnim providerima.
+        
+        Konfiguracija je trenutno hardkodovana, kasnije moze
+        da ide u YAML fajl za vise fleksibilnosti.
+        """
+        providers = []
+        
+        # Gemini
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if gemini_key:
+            providers.append(GeminiGenerator(api_key=gemini_key))
+            self.logger.info("Dodato: Gemini provider")
+        
+        # Groq
+        groq_key = os.getenv("GROQ_API_KEY")
+        if groq_key:
+            providers.append(GroqGenerator(api_key=groq_key))
+            self.logger.info("Dodato: Groq provider")
+        
+        if not providers:
+            raise RuntimeError(
+                "Nijedan provider nije konfigurisan! "
+                "Postavi GEMINI_API_KEY i/ili GROQ_API_KEY u .env"
+            )
+        
+        self.logger.info(
+            f"Multi-provider sa {len(providers)} provajdera: "
+            f"{[p.generator_name for p in providers]}"
+        )
+        
+        return MultiProviderGenerator(
+            providers=providers,
+            strategy=RoutingStrategy.ROUND_ROBIN,
+            api_key="multi_provider",
+        )
 # ============================================================
 # MAIN
 # ============================================================
